@@ -1,4 +1,4 @@
-name: Build and push docker image.
+name: Build and push docker image
 
 on:
   push:
@@ -12,22 +12,20 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v2
 
-
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
-# Login to ECR
-#=============
+    # Login to ECR
+    #=============
     - name: Login to ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-
-    - name: Docker build 
+    - name: Docker build
       run: |
         docker build -t netflix_backend:latest .
 
@@ -35,4 +33,3 @@ jobs:
       run: |
         docker tag netflix_backend:latest 060276830770.dkr.ecr.us-east-2.amazonaws.com/movie-backend:v${GITHUB_RUN_NUMBER}
         docker push 060276830770.dkr.ecr.us-east-2.amazonaws.com/movie-backend:v${GITHUB_RUN_NUMBER}
-
